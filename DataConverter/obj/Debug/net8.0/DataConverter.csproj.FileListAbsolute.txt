@@ -1,0 +1,15 @@
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\bin\Debug\net8.0\DataConverter.exe
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\bin\Debug\net8.0\DataConverter.deps.json
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\bin\Debug\net8.0\DataConverter.runtimeconfig.json
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\bin\Debug\net8.0\DataConverter.dll
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\bin\Debug\net8.0\DataConverter.pdb
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.AssemblyInfoInputs.cache
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.AssemblyInfo.cs
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.sourcelink.json
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.dll
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\refint\DataConverter.dll
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.pdb
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\DataConverter.genruntimeconfig.cache
+C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\obj\Debug\net8.0\ref\DataConverter.dll
