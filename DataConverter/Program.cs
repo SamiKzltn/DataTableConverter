@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Serialization.Metadata;
@@ -56,8 +59,8 @@ namespace MyApp
             int sutunSayisi = 0;
 
             bool[] isTrue;
-            string[] sutunlar;
-
+            string[] sutunlar = new string[sutunSayisi];
+            List<float> floatlist = new List<float>();
 
             //Burda ise ReadFile kullanarak byte byte verimizi okuyup okunanVeri stringine aktarıyoruz.
             do
@@ -80,8 +83,6 @@ namespace MyApp
             //Satır sayisini satirlar dizisinde kaç tane dizi olduğuna bakarak atamasını yapıyoruz.
             satirSayisi = satirlar.Length;
 
-            int xc = 0;
-
             //Sütun sayısını kontrol et
             foreach (string satir in satirlar)
             {
@@ -94,7 +95,11 @@ namespace MyApp
             }
 
             //DataSetimizi oluşturuz.
-            object[,] DataSet = new string[satirSayisi, sutunSayisi];
+            string[,] DataSet = new string[satirSayisi, sutunSayisi];
+            string[,] SwitchSet = new string[satirSayisi,sutunSayisi];
+            string[,] LastModel = new string[satirSayisi, sutunSayisi];
+            int checker = 0;
+            string[,] yazilar = new string[300,2];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -106,17 +111,65 @@ namespace MyApp
                 }
             }
 
-            xc = (xc / satirSayisi) + 1;
-
-            Console.WriteLine(xc);
-
-            for (int f = 0; f < ; f++)
+            for (int v = 0; v < satirSayisi; v++)
             {
-                if (DataSet[5, f] is string)
+                for (int z = 0; z < sutunSayisi; z++)
                 {
-                    
-                    Console.WriteLine("ASA");
+                    if (!(float.TryParse(DataSet[v, z], out float value)))
+                    {
+                        SwitchSet[v,z] = DataSet[v, z];
+                        yazilar[v, 0] = SwitchSet[v, z];
+                        checker++;
+                    }
                 }
+            }
+
+            int q = 1;
+
+            for(int v = 0;v < satirSayisi; v++)
+            {
+                for(int z = 0;z < sutunSayisi; z++)
+                {
+                    if (SwitchSet[v, z] != null)
+                    {
+                        if(SwitchSet[v, z] == yazilar[v,0])
+                        {
+                            LastModel[v, z] = q.ToString();
+                        }
+                        else
+                        {
+                            LastModel[v, z] = q.ToString();
+                            q++;
+                        }
+                    }
+                }
+            }
+
+            for(int v = 0; v < yazilar.Length; v++)
+            {
+                Console.WriteLine(yazilar[v,0]);
+            }
+                
+            float[] floatArray = floatlist.ToArray();
+
+            Console.WriteLine("String Yazilari: \n");
+            for (int i = 0; i < satirSayisi; i++)
+            {
+                for (int j = 0; j < sutunSayisi; j++)
+                {
+                    Console.Write(SwitchSet[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
+                }
+                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
+            }
+
+            Console.WriteLine("Last Yazilari: \n");
+            for (int i = 0; i < satirSayisi; i++)
+            {
+                for (int j = 0; j < sutunSayisi; j++)
+                {
+                    Console.Write(LastModel[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
+                }
+                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
             }
 
 
