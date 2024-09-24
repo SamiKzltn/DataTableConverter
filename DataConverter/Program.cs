@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization.Metadata;
 
 namespace MyApp
 {
@@ -54,6 +55,9 @@ namespace MyApp
             int satirSayisi = 0;
             int sutunSayisi = 0;
 
+            bool[] isTrue;
+            string[] sutunlar;
+
 
             //Burda ise ReadFile kullanarak byte byte verimizi okuyup okunanVeri stringine aktarıyoruz.
             do
@@ -76,29 +80,46 @@ namespace MyApp
             //Satır sayisini satirlar dizisinde kaç tane dizi olduğuna bakarak atamasını yapıyoruz.
             satirSayisi = satirlar.Length;
 
+            int xc = 0;
+
             //Sütun sayısını kontrol et
             foreach (string satir in satirlar)
             {
                 if (!string.IsNullOrWhiteSpace(satir))
                 {
                     //Her satirdaki "," leri ayırıp sutun dizimize stringleri aktarıyoruz o sırada da sutun sayımızı öğreniyoruz.
-                    string[] sutunlar = satir.Split(',');
+                    sutunlar = satir.Split(',');
                     sutunSayisi = Math.Max(sutunSayisi, sutunlar.Length);
                 }
             }
 
             //DataSetimizi oluşturuz.
-            string[,] DataSet = new string[satirSayisi, sutunSayisi];
+            object[,] DataSet = new string[satirSayisi, sutunSayisi];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
             {
-                string[] sutunlar = satirlar[i].Split(',');
+                sutunlar = satirlar[i].Split(',');
                 for (int j = 0; j < sutunlar.Length; j++)
                 {
                     DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
                 }
             }
+
+            xc = (xc / satirSayisi) + 1;
+
+            Console.WriteLine(xc);
+
+            for (int f = 0; f < ; f++)
+            {
+                if (DataSet[5, f] is string)
+                {
+                    
+                    Console.WriteLine("ASA");
+                }
+            }
+
+
 
             Console.WriteLine("DataSet İçeriği: \n");
             for (int i = 0; i < satirSayisi; i++)
