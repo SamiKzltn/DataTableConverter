@@ -40,7 +40,7 @@ namespace MyApp
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\DataSet.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\car.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -51,12 +51,13 @@ namespace MyApp
             }
 
             //Dosya boyutunu sınırlamayı burdaki byte değişkeninden ayarlıyoruz.
-            byte[] buffer = new byte[10240];
+            byte[] buffer = new byte[20480];
             uint bytesOkundu;
             StringBuilder toplamIcerik = new StringBuilder();
             //DataSetimizin satir ve sütunlarını oluşturuyoruz.
             int satirSayisi = 0;
             int sutunSayisi = 0;
+            string[] satirlar = new string[500];
 
             bool[] isTrue;
             string[] sutunlar = new string[sutunSayisi];
@@ -79,7 +80,7 @@ namespace MyApp
             } while (bytesOkundu > 0);
 
             //Tüm içeriği satır satır ayırıyoruz.
-            string[] satirlar = toplamIcerik.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            satirlar = toplamIcerik.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             //Satır sayisini satirlar dizisinde kaç tane dizi olduğuna bakarak atamasını yapıyoruz.
             satirSayisi = satirlar.Length;
 
@@ -124,31 +125,7 @@ namespace MyApp
                 }
             }
 
-            int q = 1;
-
-            for(int v = 0;v < satirSayisi; v++)
-            {
-                for(int z = 0;z < sutunSayisi; z++)
-                {
-                    if (SwitchSet[v, z] != null)
-                    {
-                        if(SwitchSet[v, z] == yazilar[v,0])
-                        {
-                            LastModel[v, z] = q.ToString();
-                        }
-                        else
-                        {
-                            LastModel[v, z] = q.ToString();
-                            q++;
-                        }
-                    }
-                }
-            }
-
-            for(int v = 0; v < yazilar.Length; v++)
-            {
-                Console.WriteLine(yazilar[v,0]);
-            }
+            Console.WriteLine(toplamIcerik);
                 
             float[] floatArray = floatlist.ToArray();
 
@@ -162,16 +139,12 @@ namespace MyApp
                 Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
             }
 
-            Console.WriteLine("Last Yazilari: \n");
-            for (int i = 0; i < satirSayisi; i++)
-            {
-                for (int j = 0; j < sutunSayisi; j++)
-                {
-                    Console.Write(LastModel[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
-                }
-                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
-            }
+            Console.WriteLine("-----------------------------------------");
+            foreach (string s in satirlar) { Console.WriteLine(s); }
 
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine(satirlar.Length);
+            Console.WriteLine(satirSayisi);
 
 
             Console.WriteLine("DataSet İçeriği: \n");
