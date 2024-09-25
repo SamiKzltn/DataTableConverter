@@ -57,9 +57,6 @@ namespace MyApp
             //DataSetimizin satir ve sütunlarını oluşturuyoruz.
             int satirSayisi = 0;
             int sutunSayisi = 0;
-            string[] satirlar = new string[500];
-
-            bool[] isTrue;
             string[] sutunlar = new string[sutunSayisi];
             List<float> floatlist = new List<float>();
 
@@ -80,7 +77,8 @@ namespace MyApp
             } while (bytesOkundu > 0);
 
             //Tüm içeriği satır satır ayırıyoruz.
-            satirlar = toplamIcerik.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] satirlar = toplamIcerik.ToString().Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
             //Satır sayisini satirlar dizisinde kaç tane dizi olduğuna bakarak atamasını yapıyoruz.
             satirSayisi = satirlar.Length;
 
@@ -99,8 +97,7 @@ namespace MyApp
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi,sutunSayisi];
             string[,] LastModel = new string[satirSayisi, sutunSayisi];
-            int checker = 0;
-            string[,] yazilar = new string[300,2];
+            string[,] yazilar = new string[13000,2];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -112,40 +109,60 @@ namespace MyApp
                 }
             }
 
+            int checker = 1;
+
+            // Değerleri ve onların karşılık gelen numaralarını tutmak için bir dictionary oluşturuyoruz.
+            Dictionary<string, int> degerMap = new Dictionary<string, int>();
+            int mevcutNumara = 1; // Başlangıçta atamaya başlamak için numara
+
             for (int v = 0; v < satirSayisi; v++)
             {
                 for (int z = 0; z < sutunSayisi; z++)
                 {
-                    if (!(float.TryParse(DataSet[v, z], out float value)))
+                    // Boş veya null olup olmadığını kontrol ediyoruz
+                    if (DataSet[v, z] != null && !string.IsNullOrWhiteSpace(DataSet[v, z]))
                     {
-                        SwitchSet[v,z] = DataSet[v, z];
-                        yazilar[v, 0] = SwitchSet[v, z];
-                        checker++;
+                        if (!(float.TryParse(DataSet[v, z], out float value))) // Sayı değilse
+                        {
+                            string currentValue = DataSet[v, z]; // Mevcut satırdaki değer
+                            SwitchSet[v, z] = currentValue; // İlk başta veriyi aktarıyoruz.
+
+                            // Eğer değer daha önce görülmediyse, yeni bir numara atıyoruz.
+                            if (!degerMap.ContainsKey(currentValue))
+                            {
+                                degerMap[currentValue] = mevcutNumara; // Yeni bir numara ver
+                                mevcutNumara++; // Numara artır
+                            }
+
+                            // O değerin numarasını SwitchSet'e yazıyoruz.
+                            SwitchSet[v, z] = degerMap[currentValue].ToString();
+                        }
+                        else
+                        {
+                            LastModel[v, z]= DataSet[v, z];
+                        }
+                    }
+                    else
+                    {
+                        // Eğer null ya da boşsa, bir default değer ya da boş bir string atayabiliriz
+                        SwitchSet[v, z] = "0"; // Veya istediğiniz bir default değer
                     }
                 }
             }
 
-            Console.WriteLine(toplamIcerik);
-                
-            float[] floatArray = floatlist.ToArray();
-
-            Console.WriteLine("String Yazilari: \n");
-            for (int i = 0; i < satirSayisi; i++)
+            for(int ss = 0; ss < sutunSayisi; ss++)
             {
-                for (int j = 0; j < sutunSayisi; j++)
+                for(int zz = 0; zz < satirSayisi; zz++)
                 {
-                    Console.Write(SwitchSet[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
+                    if (string.IsNullOrWhiteSpace(LastModel[zz, ss]))
+                    {
+                        LastModel[zz,ss] = SwitchSet[zz, ss];
+                    }
+                    else { }
                 }
-                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
             }
 
-            Console.WriteLine("-----------------------------------------");
-            foreach (string s in satirlar) { Console.WriteLine(s); }
-
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine(satirlar.Length);
-            Console.WriteLine(satirSayisi);
-
+            float[] floatArray = floatlist.ToArray();
 
             Console.WriteLine("DataSet İçeriği: \n");
             for (int i = 0; i < satirSayisi; i++)
@@ -153,6 +170,28 @@ namespace MyApp
                 for (int j = 0; j < sutunSayisi; j++)
                 {
                     Console.Write(DataSet[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
+                }
+                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
+            }
+
+
+            Console.WriteLine("-------------------------------------------------------");
+
+            // DataSetimizdeki değerlerin atandığı sayilar ekrana yazdırılıyor.
+            Console.WriteLine("DataSet'in Stringlerinin Aldığı Değerler : \n");
+            foreach (var s in degerMap)
+            {
+                Console.WriteLine(s);
+            }
+
+            Console.WriteLine("-------------------------------------------------------");
+
+            Console.WriteLine("DataSet İçeriği: \n");
+            for (int i = 0; i < satirSayisi; i++)
+            {
+                for (int j = 0; j < sutunSayisi; j++)
+                {
+                    Console.Write(LastModel[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
                 }
                 Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
             }
