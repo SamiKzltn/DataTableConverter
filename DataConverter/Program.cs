@@ -37,6 +37,18 @@ namespace MyApp
         const uint OPEN_EXISTING = 3;
         const uint FILE_SHARE_READ = 0x00000001;
 
+        public static void ShowOnConsole(string[,] dizi, int satir_sayisi, int sutun_sayisi)
+        {
+            for (int i = 0; i < satir_sayisi; i++)
+            {
+                for (int j = 0; j < sutun_sayisi; j++)
+                {
+                    Console.Write(dizi[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
+                }
+                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
+            }
+        }
+
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
@@ -97,7 +109,7 @@ namespace MyApp
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi,sutunSayisi];
             string[,] LastModel = new string[satirSayisi, sutunSayisi];
-            string[,] yazilar = new string[13000,2];
+            string[,] yazilar = new string[100000, 2];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -108,33 +120,32 @@ namespace MyApp
                     DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
                 }
             }
-
-            int checker = 1;
-
-            // Değerleri ve onların karşılık gelen numaralarını tutmak için bir dictionary oluşturuyoruz.
+            //Değerleri ve onların karşılık gelen numaralarını tutmak için bir dictionary oluşturuyoruz.
             Dictionary<string, int> degerMap = new Dictionary<string, int>();
-            int mevcutNumara = 1; // Başlangıçta atamaya başlamak için numara
+            int mevcutNumara = 1;
+            int deger = 0;
 
             for (int v = 0; v < satirSayisi; v++)
             {
                 for (int z = 0; z < sutunSayisi; z++)
                 {
-                    // Boş veya null olup olmadığını kontrol ediyoruz
+                    //Boş veya null olup olmadığını kontrol ediyoruz.
                     if (DataSet[v, z] != null && !string.IsNullOrWhiteSpace(DataSet[v, z]))
                     {
-                        if (!(float.TryParse(DataSet[v, z], out float value))) // Sayı değilse
+                        if (!(float.TryParse(DataSet[v, z], out float value)))
                         {
-                            string currentValue = DataSet[v, z]; // Mevcut satırdaki değer
-                            SwitchSet[v, z] = currentValue; // İlk başta veriyi aktarıyoruz.
+                            deger++;
+                            string currentValue = DataSet[v, z];
+                            SwitchSet[v, z] = currentValue;
 
                             // Eğer değer daha önce görülmediyse, yeni bir numara atıyoruz.
                             if (!degerMap.ContainsKey(currentValue))
                             {
-                                degerMap[currentValue] = mevcutNumara; // Yeni bir numara ver
-                                mevcutNumara++; // Numara artır
+                                degerMap[currentValue] = mevcutNumara;
+                                mevcutNumara++;
                             }
 
-                            // O değerin numarasını SwitchSet'e yazıyoruz.
+                            //O değerin numarasını SwitchSet'e yazıyoruz.
                             SwitchSet[v, z] = degerMap[currentValue].ToString();
                         }
                         else
@@ -149,6 +160,7 @@ namespace MyApp
                     }
                 }
             }
+            yazilar = new string[deger, 2];
 
             for(int ss = 0; ss < sutunSayisi; ss++)
             {
@@ -161,44 +173,27 @@ namespace MyApp
                     else { }
                 }
             }
-
             float[] floatArray = floatlist.ToArray();
 
             Console.WriteLine("DataSet İçeriği: \n");
-            for (int i = 0; i < satirSayisi; i++)
-            {
-                for (int j = 0; j < sutunSayisi; j++)
-                {
-                    Console.Write(DataSet[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
-                }
-                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
-            }
-
-
-            Console.WriteLine("-------------------------------------------------------");
+            ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
 
             // DataSetimizdeki değerlerin atandığı sayilar ekrana yazdırılıyor.
+            Console.WriteLine("-------------------------------------------------------");
             Console.WriteLine("DataSet'in Stringlerinin Aldığı Değerler : \n");
             foreach (var s in degerMap)
             {
                 Console.WriteLine(s);
             }
-
             Console.WriteLine("-------------------------------------------------------");
 
             Console.WriteLine("DataSet İçeriği: \n");
-            for (int i = 0; i < satirSayisi; i++)
-            {
-                for (int j = 0; j < sutunSayisi; j++)
-                {
-                    Console.Write(LastModel[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
-                }
-                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
-            }
+            ShowOnConsole(LastModel,satirSayisi,sutunSayisi);
 
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
+            Console.WriteLine(deger);
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);
