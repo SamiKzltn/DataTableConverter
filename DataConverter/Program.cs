@@ -52,7 +52,7 @@ namespace MyApp
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\car.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Banka.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -88,6 +88,8 @@ namespace MyApp
                 }
             } while (bytesOkundu > 0);
 
+            bool trick = false;
+
             //Tüm içeriği satır satır ayırıyoruz.
             string[] satirlar = toplamIcerik.ToString().Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -99,8 +101,16 @@ namespace MyApp
             {
                 if (!string.IsNullOrWhiteSpace(satir))
                 {
-                    //Her satirdaki "," leri ayırıp sutun dizimize stringleri aktarıyoruz o sırada da sutun sayımızı öğreniyoruz.
-                    sutunlar = satir.Split(',');
+                    if (satir.Contains(","))
+                    {
+                        //Her satirdaki "," leri ayırıp sutun dizimize stringleri aktarıyoruz o sırada da sutun sayımızı öğreniyoruz.
+                        sutunlar = satir.Split(',');
+                        trick = true;
+                    }
+                    else if (satir.Contains(";"))
+                    {
+                        sutunlar = satir.Split(';');
+                    }
                     sutunSayisi = Math.Max(sutunSayisi, sutunlar.Length);
                 }
             }
@@ -114,10 +124,20 @@ namespace MyApp
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
             {
-                sutunlar = satirlar[i].Split(',');
-                for (int j = 0; j < sutunlar.Length; j++)
+                if (trick == true)
                 {
-                    DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
+                    sutunlar = satirlar[i].Split(',');
+                    for (int j = 0; j < sutunlar.Length; j++)
+                    {
+                        DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
+                    }
+                }
+                else if (trick == false) {
+                    sutunlar = satirlar[i].Split(';');
+                    for (int j = 0; j < sutunlar.Length; j++)
+                    {
+                        DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
+                    }
                 }
             }
             //Değerleri ve onların karşılık gelen numaralarını tutmak için bir dictionary oluşturuyoruz.
