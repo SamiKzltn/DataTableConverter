@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json.Serialization.Metadata;
 
@@ -37,6 +38,49 @@ namespace MyApp
         const uint OPEN_EXISTING = 3;
         const uint FILE_SHARE_READ = 0x00000001;
 
+        public static string[,] OrtalamaYaz(string[,] Dizi)
+        {
+            int rows = Dizi.GetLength(0);
+            int cols = Dizi.GetLength(1);
+            int sorusayar = 0;
+            int[] eksikdegerler = new int[rows];
+
+            for (int col = 0; col < cols; col++)
+            {
+                float toplam = 0;
+                int sayac = 0;
+                int eksikSatir = -1;
+
+                for (int row = 0; row < rows; row++)
+                {
+                    if (Dizi[row, col] == "?")
+                    {
+                        eksikdegerler[sorusayar] = row;
+                        sorusayar++;
+                    }
+                    else if (float.TryParse(Dizi[row, col], NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
+                    {
+                        toplam += value;
+                        sayac++;
+                    }
+                }
+                if (eksikdegerler != null && sayac > 0)
+                {
+                    for(int kf = 0; kf < eksikdegerler.Length; kf++)
+                    {
+                        float ortalama = toplam / sayac;
+                        Dizi[eksikdegerler[kf], col] = ortalama.ToString("F1");
+                    }
+                    Console.WriteLine(sayac);
+                    Console.WriteLine(toplam);
+                }
+            }
+
+            return Dizi;
+        }
+
+
+
         public static void ShowOnConsole(string[,] dizi, int satir_sayisi, int sutun_sayisi)
         {
             for (int i = 0; i < satir_sayisi; i++)
@@ -52,7 +96,7 @@ namespace MyApp
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Banka.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\DataSet.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -119,7 +163,7 @@ namespace MyApp
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi,sutunSayisi];
             string[,] LastModel = new string[satirSayisi, sutunSayisi];
-            string[,] yazilar = new string[100000, 2];
+            string[,] yazilar = new string[200000, 2];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -145,6 +189,12 @@ namespace MyApp
             int mevcutNumara = 1;
             int deger = 0;
 
+            OrtalamaYaz(DataSet);
+
+            Console.WriteLine("-----------------------------------------");
+            ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
+            Console.WriteLine("-----------------------------------------");
+            
             for (int v = 0; v < satirSayisi; v++)
             {
                 for (int z = 0; z < sutunSayisi; z++)
@@ -213,6 +263,7 @@ namespace MyApp
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
+            Console.WriteLine(yazilar.Length);
             Console.WriteLine(deger);
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.

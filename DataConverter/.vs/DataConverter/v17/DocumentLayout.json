@@ -32,9 +32,10 @@
               "RelativeDocumentMoniker": "car.txt",
               "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\car.txt",
               "RelativeToolTip": "car.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAL8GAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAIsGAAAAAAAAAAAAABIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-09-25T06:53:14.598Z"
+              "WhenOpened": "2024-09-25T06:53:14.598Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -44,9 +45,10 @@
               "RelativeDocumentMoniker": "DataSet.txt",
               "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\DataSet.txt",
               "RelativeToolTip": "DataSet.txt",
-              "ViewState": "AgIAAIwAAAAAAAAAAAAAAJYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-09-24T15:39:45.446Z"
+              "WhenOpened": "2024-09-24T15:39:45.446Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -56,7 +58,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAAACEAAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAAEoAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-20T09:18:23.596Z",
               "EditorCaption": ""

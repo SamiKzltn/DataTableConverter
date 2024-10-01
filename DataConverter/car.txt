@@ -16,7 +16,7 @@ vhigh,vhigh,2,4,med,high,unacc
 vhigh,vhigh,2,4,big,low,unacc
 vhigh,vhigh,2,4,big,med,unacc
 vhigh,vhigh,2,4,big,high,unacc
-vhigh,vhigh,2,more,small,low,unacc
+vhigh,vhigh,?,more,small,low,unacc
 vhigh,vhigh,2,more,small,med,unacc
 vhigh,vhigh,2,more,small,high,unacc
 vhigh,vhigh,2,more,med,low,unacc
