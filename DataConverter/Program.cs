@@ -68,7 +68,7 @@ namespace MyApp
                     foreach (var eksiksatir in eksikdegerler)
                     {
                         Dizi[eksiksatir, col] = ortalama.ToString("F1", CultureInfo.InvariantCulture);
-                        Console.WriteLine(eksiksatir + "," + col + " = "+ ortalama.ToString("F1", CultureInfo.InvariantCulture));
+                        Console.WriteLine(eksiksatir + "," + col + " = " + ortalama.ToString("F1", CultureInfo.InvariantCulture));
                     }
                 }
             }
@@ -168,6 +168,49 @@ namespace MyApp
             }
             return diziSayisi;
         }
+        public static Dictionary<string, List<string[]>> OrganizeByLastColumn(string[,] Dizi)
+        {
+            int rows = Dizi.GetLength(0);
+            int cols = Dizi.GetLength(1);
+
+            // Son sütundaki benzersiz string'ler için bir sözlük (Dictionary) oluşturuyoruz
+            Dictionary<string, List<string[]>> result = new Dictionary<string, List<string[]>>();
+
+            for (int i = 0; i < rows; i++)
+            {
+                // Son sütundaki string'i alıyoruz
+                string key = Dizi[i, cols - 1];
+
+                // Eğer sözlükte bu string (key) yoksa, o string için yeni bir liste oluşturuyoruz
+                if (!result.ContainsKey(key))
+                {
+                    result[key] = new List<string[]>();
+                }
+
+                // O satırı listeye ekliyoruz
+                string[] row = new string[cols];
+                for (int j = 0; j < cols; j++)
+                {
+                    row[j] = Dizi[i, j];
+                }
+                result[key].Add(row);
+            }
+
+            // Çıktı üretme kısmı: Her sınıf ve ona ait satırları yazdırıyoruz
+            foreach (var entry in result)
+            {
+                Console.WriteLine($"Class: {entry.Key}");
+                foreach (var row in entry.Value)
+                {
+                    Console.WriteLine(string.Join(", ", row));
+                }
+                Console.WriteLine(); // Her sınıf arasına boş satır koyar
+            }
+
+            return result;
+        }
+
+
 
         static void Main(string[] args)
         {
@@ -252,7 +295,8 @@ namespace MyApp
                         DataSet[i, j] = sutunlar[j].Trim(); //Trim fonksiyonu ile boşlukları temizliyoruz.
                     }
                 }
-                else if (trick == false) {
+                else if (trick == false)
+                {
                     sutunlar = satirlar[i].Split(';');
                     for (int j = 0; j < sutunlar.Length; j++)
                     {
@@ -270,8 +314,8 @@ namespace MyApp
             Console.WriteLine("---------------------------Lazım");
             //YaziToRakam(DataSet,LastModel);
             Console.WriteLine("-----------------------------");
-            ShowOnConsole(DataSet,satirSayisi,sutunSayisi);
-            ShowOnConsole(SwitchSet,satirSayisi,sutunSayisi);
+            ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
+            ShowOnConsole(SwitchSet, satirSayisi, sutunSayisi);
             Console.WriteLine("-----------------------------");
 
             for (int v = 0; v < satirSayisi; v++)
@@ -346,6 +390,8 @@ namespace MyApp
             Console.WriteLine(deger);
 
             ClassOrganization(DataSet);
+
+            OrganizeByLastColumn(DataSet);
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);
