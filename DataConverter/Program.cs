@@ -87,15 +87,14 @@ namespace MyApp
             }
         }
 
-        public static string[,] YaziToRakam(string[,] Dizi)
+        public static string[,] YaziToRakam(string[,] Dizi, string[,] LastModel)
         {
             int rows = Dizi.GetLength(0);
             int cols = Dizi.GetLength(1);
             string[,] SwitchSet = new string[rows, cols];
-            string[,] LastModel = new string[rows, cols];
 
             // Her sütun için döngü
-            for (int i = 0; i < cols-1; i++)
+            for (int i = 0; i < cols; i++)
             {
                 Dictionary<string, int> degerMap = new Dictionary<string, int>();
                 int mevcutNumara = 1;
@@ -135,12 +134,8 @@ namespace MyApp
                     }
                 }
             }
+
             return SwitchSet;
-        }
-        public static string[,] DiziOlustur(int cols, int rows)
-        {
-            string[,] dizi = new string[rows, cols];
-            return dizi;
         }
 
         public static Dictionary<string, int> ClassOrganization(string[,] Dizi)
@@ -212,7 +207,52 @@ namespace MyApp
 
             return result;
         }
+        public static void DizileriOlustur(Dictionary<string, List<string[]>> dictionary)
+        {
+            // Her sınıf (anahtar) için bir dizi oluşturuyoruz
+            foreach (var entry in dictionary)
+            {
+                string className = entry.Key; // Sınıf ismi (anahtar)
+                List<string[]> data = entry.Value; // Sınıf verileri (değer)
 
+                // Sınıf verileri ile dizi boyutlarını hesaplayalım
+                int rows = data.Count;
+                int cols = data[0].Length;
+
+                // Yeni dizi oluşturalım
+                string[,] result = new string[rows, cols];
+
+                // Verileri diziye aktaralım
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        result[i, j] = data[i][j];
+                    }
+                }
+
+                // Diziyi ekrana yazdıralım
+                Console.WriteLine($"Sınıf: {className}");
+                YazdirDizi(result);
+                Console.WriteLine();
+            }
+        }
+
+        // Dizi içeriğini ekrana yazdıran yardımcı fonksiyon
+        public static void YazdirDizi(string[,] dizi)
+        {
+            int rows = dizi.GetLength(0);
+            int cols = dizi.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Console.Write(dizi[i, j] + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
 
 
         static void Main(string[] args)
@@ -285,7 +325,6 @@ namespace MyApp
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi, sutunSayisi];
             string[,] LastModel = new string[satirSayisi, sutunSayisi];
-            string[,] yazilar = new string[200000, 2];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -356,7 +395,6 @@ namespace MyApp
                     }
                 }
             }
-            yazilar = new string[deger, 2];
 
             for (int ss = 0; ss < sutunSayisi; ss++)
             {
@@ -369,7 +407,6 @@ namespace MyApp
                     else { }
                 }
             }
-            float[] floatArray = floatlist.ToArray();
 
             Console.WriteLine("DataSet İçeriği: \n");
             ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
@@ -389,8 +426,6 @@ namespace MyApp
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
-            Console.WriteLine(yazilar.Length);
-            Console.WriteLine(deger);
 
             ClassOrganization(DataSet);
 
