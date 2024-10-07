@@ -74,17 +74,6 @@ namespace MyApp
             }
             return Dizi;
         }
-        public static void ShowOnConsole(string[,] dizi, int satir_sayisi, int sutun_sayisi)
-        {
-            for (int i = 0; i < satir_sayisi; i++)
-            {
-                for (int j = 0; j < sutun_sayisi; j++)
-                {
-                    Console.Write(dizi[i, j] + "\t"); //Sütunların arasına tab ile ayırıyoruz.
-                }
-                Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
-            }
-        }
         public static string[,] YaziToRakam(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
@@ -146,34 +135,6 @@ namespace MyApp
             }
             return LastModel;
         }
-        public static Dictionary<string, int> ClassOrganization(string[,] Dizi)
-        {
-            int rows = Dizi.GetLength(0);
-            int cols = Dizi.GetLength(1);
-            int deger2 = 0;
-            int mevcutnumara = 1;
-
-            Dictionary<string, int> diziSayisi = new Dictionary<string, int>();
-
-            for (int i = 0; i < rows; i++)
-            {
-                if (!string.IsNullOrWhiteSpace(Dizi[i, cols - 1]))
-                {
-                    deger2++;
-                    string gecici = Dizi[i, cols - 1];
-                    if (!diziSayisi.ContainsKey(gecici))
-                    {
-                        diziSayisi[gecici] = mevcutnumara;
-                        mevcutnumara++;
-                    }
-                }
-            }
-            foreach (var item in diziSayisi)
-            {
-                Console.WriteLine(item.Key + " " + item.Value);
-            }
-            return diziSayisi;
-        }
         public static Dictionary<string, List<string[]>> OrganizeByLastColumn(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
@@ -201,6 +162,13 @@ namespace MyApp
                 }
                 result[key].Add(row);
             }
+            Console.WriteLine("Classlarımız Şunlardır :\n");
+            foreach (var entry in result) 
+            { 
+                Console.WriteLine(entry.Key);
+            }
+
+            Console.WriteLine("--------------------------------------\n");
 
             // Çıktı üretme kısmı: Her sınıf ve ona ait satırları yazdırıyoruz
             foreach (var entry in result)
@@ -241,10 +209,13 @@ namespace MyApp
 
                 // Diziyi ekrana yazdıralım
                 Console.WriteLine($"Sınıf: {className}");
+                Console.WriteLine("\nSınıfımızın Dönüşüm Değerleri : \n");
                 result = YaziToRakam(result);
+                Console.WriteLine("\nSoru işaretleri yerine gelen değerler :\n");
                 result = OrtalamaYaz(result);
+                Console.WriteLine("\nSınıfımızın Son Hali : \n");
                 YazdirDizi(result);
-                Console.WriteLine();
+                Console.WriteLine("--------------------------------------\n");
             }
         }
         public static void YazdirDizi(string[,] dizi)
@@ -262,11 +233,10 @@ namespace MyApp
             }
         }
 
-
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Lazim.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\DataSet.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -327,7 +297,6 @@ namespace MyApp
                     sutunSayisi = Math.Max(sutunSayisi, sutunlar.Length);
                 }
             }
-
             //DataSetimizi oluşturuz.
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi, sutunSayisi];
@@ -353,7 +322,6 @@ namespace MyApp
                     }
                 }
             }
-
             //Veri setimizi ekrana yazdırıyoruz.
             Console.WriteLine("Girdiğiniz Veri Setiniz :\n");
             YazdirDizi(DataSet);
@@ -366,19 +334,13 @@ namespace MyApp
             //Console.WriteLine("---------------------------------");
 
             Dictionary<string, List<string[]>> classes = new Dictionary<string, List<string[]>>();
-
-            ClassOrganization(DataSet);
-
             classes = OrganizeByLastColumn(DataSet);
 
             DizileriOlustur(classes);
 
-
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
-
-
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);
