@@ -87,26 +87,29 @@ namespace MyApp
             }
         }
 
-        public static string[,] YaziToRakam(string[,] Dizi, string[,] LastModel)
+        public static string[,] YaziToRakam(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
             int cols = Dizi.GetLength(1);
             string[,] SwitchSet = new string[rows, cols];
+            string[,] LastModel = new string[rows, cols];
 
-            for (int i = 0; i < cols; i++)
+            // Her sütun için döngü
+            for (int i = 0; i < cols-1; i++)
             {
                 Dictionary<string, int> degerMap = new Dictionary<string, int>();
                 int mevcutNumara = 1;
 
+                // Her satır için döngü
                 for (int z = 0; z < rows; z++)
                 {
-                    //Boş veya null olup olmadığını kontrol ediyoruz.
+                    // Boş veya null olup olmadığını kontrol ediyoruz.
                     if (Dizi[z, i] != null && !string.IsNullOrWhiteSpace(Dizi[z, i]))
                     {
-                        if (!(float.TryParse(Dizi[z, i], out float value)))
+                        // Eğer sayısal bir değer değilse
+                        if (!float.TryParse(Dizi[z, i], out float value))
                         {
                             string currentValue = Dizi[z, i];
-                            SwitchSet[z, i] = currentValue;
 
                             // Eğer değer daha önce görülmediyse, yeni bir numara atıyoruz.
                             if (!degerMap.ContainsKey(currentValue))
@@ -115,25 +118,25 @@ namespace MyApp
                                 mevcutNumara++;
                             }
 
-                            //O değerin numarasını SwitchSet'e yazıyoruz.
+                            // O değerin numarasını SwitchSet'e yazıyoruz.
                             SwitchSet[z, i] = degerMap[currentValue].ToString();
                         }
                         else
                         {
+                            // Eğer sayısal bir değer varsa, LastModel'e ve SwitchSet'e aynısını atıyoruz
                             LastModel[z, i] = Dizi[z, i];
+                            SwitchSet[z, i] = Dizi[z, i];
                         }
                     }
                     else
                     {
-                        // Eğer null ya da boşsa, bir default değer ya da boş bir string atayabiliriz
+                        // Eğer null ya da boşsa, varsayılan bir değer atayabiliriz (örneğin "0").
                         SwitchSet[z, i] = "0";
                     }
-                    degerMap = new Dictionary<string, int>();
                 }
             }
             return SwitchSet;
         }
-
         public static string[,] DiziOlustur(int cols, int rows)
         {
             string[,] dizi = new string[rows, cols];
