@@ -74,7 +74,6 @@ namespace MyApp
             }
             return Dizi;
         }
-
         public static void ShowOnConsole(string[,] dizi, int satir_sayisi, int sutun_sayisi)
         {
             for (int i = 0; i < satir_sayisi; i++)
@@ -86,27 +85,30 @@ namespace MyApp
                 Console.WriteLine(); //Satır sonunda yeni satıra geçmek için bi boşluk.
             }
         }
-
-        public static string[,] YaziToRakam(string[,] Dizi, string[,] LastModel)
+        public static string[,] YaziToRakam(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
             int cols = Dizi.GetLength(1);
-            string[,] SwitchSet = new string[rows, cols];
+            string[,] LastModel = new string[rows, cols];
+            int mevcutNumara = 1;
 
             // Her sütun için döngü
-            for (int i = 0; i < cols; i++)
+            for (int i = 0; i < cols-1; i++)
             {
                 Dictionary<string, int> degerMap = new Dictionary<string, int>();
-                int mevcutNumara = 1;
-
                 // Her satır için döngü
                 for (int z = 0; z < rows; z++)
                 {
                     // Boş veya null olup olmadığını kontrol ediyoruz.
                     if (Dizi[z, i] != null && !string.IsNullOrWhiteSpace(Dizi[z, i]))
                     {
+
+                        if (Dizi[z, i] == "?")
+                        {
+                            LastModel[z, i] = "?";
+                        }
                         // Eğer sayısal bir değer değilse
-                        if (!float.TryParse(Dizi[z, i], out float value))
+                        else if (!float.TryParse(Dizi[z, i], out float value))
                         {
                             string currentValue = Dizi[z, i];
 
@@ -118,26 +120,32 @@ namespace MyApp
                             }
 
                             // O değerin numarasını SwitchSet'e yazıyoruz.
-                            SwitchSet[z, i] = degerMap[currentValue].ToString();
+                            LastModel[z, i] = degerMap[currentValue].ToString();
                         }
                         else
                         {
-                            // Eğer sayısal bir değer varsa, LastModel'e ve SwitchSet'e aynısını atıyoruz
                             LastModel[z, i] = Dizi[z, i];
-                            SwitchSet[z, i] = Dizi[z, i];
                         }
                     }
                     else
                     {
                         // Eğer null ya da boşsa, varsayılan bir değer atayabiliriz (örneğin "0").
-                        SwitchSet[z, i] = "0";
+                        LastModel[z, i] = "0";
                     }
                 }
+                foreach (var s in degerMap)
+                {
+                    Console.WriteLine(s);
+                }
+                Console.WriteLine("-------------------------------------------------------");
+                degerMap = new Dictionary<string, int>();
             }
-
-            return SwitchSet;
+            for(int z = 0; z < rows; z++)
+            {
+                LastModel[z, cols-1] = Dizi[z, cols-1];
+            }
+            return LastModel;
         }
-
         public static Dictionary<string, int> ClassOrganization(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
@@ -233,12 +241,12 @@ namespace MyApp
 
                 // Diziyi ekrana yazdıralım
                 Console.WriteLine($"Sınıf: {className}");
+                result = YaziToRakam(result);
+                result = OrtalamaYaz(result);
                 YazdirDizi(result);
                 Console.WriteLine();
             }
         }
-
-        // Dizi içeriğini ekrana yazdıran yardımcı fonksiyon
         public static void YazdirDizi(string[,] dizi)
         {
             int rows = dizi.GetLength(0);
@@ -258,7 +266,7 @@ namespace MyApp
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\DataSet.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Lazim.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -276,7 +284,6 @@ namespace MyApp
             int satirSayisi = 0;
             int sutunSayisi = 0;
             string[] sutunlar = new string[sutunSayisi];
-            List<float> floatlist = new List<float>();
 
             //Burda ise ReadFile kullanarak byte byte verimizi okuyup okunanVeri stringine aktarıyoruz.
             do
@@ -346,90 +353,32 @@ namespace MyApp
                     }
                 }
             }
-            //Değerleri ve onların karşılık gelen numaralarını tutmak için bir dictionary oluşturuyoruz.
-            Dictionary<string, int> degerMap = new Dictionary<string, int>();
-            int mevcutNumara = 1;
-            int deger = 0;
 
-            //Fonksiyonu kullandığımız yer burasıdır.
-            OrtalamaYaz(DataSet);
-            Console.WriteLine("---------------------------Lazım");
-            //YaziToRakam(DataSet,LastModel);
-            Console.WriteLine("-----------------------------");
-            ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
-            ShowOnConsole(SwitchSet, satirSayisi, sutunSayisi);
-            Console.WriteLine("-----------------------------");
+            //Veri setimizi ekrana yazdırıyoruz.
+            Console.WriteLine("Girdiğiniz Veri Setiniz :\n");
+            YazdirDizi(DataSet);
+            Console.WriteLine("---------------------------------");
 
-            for (int v = 0; v < satirSayisi; v++)
-            {
-                for (int z = 0; z < sutunSayisi; z++)
-                {
-                    //Boş veya null olup olmadığını kontrol ediyoruz.
-                    if (DataSet[v, z] != null && !string.IsNullOrWhiteSpace(DataSet[v, z]))
-                    {
-                        if (!(float.TryParse(DataSet[v, z], out float value)))
-                        {
-                            deger++;
-                            string currentValue = DataSet[v, z];
-                            SwitchSet[v, z] = currentValue;
+            //Veri Setinin Rakama çevrilmiş halinin ekrana yazdırılması
+            //SwitchSet = YaziToRakam(DataSet);
+            //Console.WriteLine("Rakam Halleri\n");
+            //YazdirDizi(SwitchSet);
+            //Console.WriteLine("---------------------------------");
 
-                            // Eğer değer daha önce görülmediyse, yeni bir numara atıyoruz.
-                            if (!degerMap.ContainsKey(currentValue))
-                            {
-                                degerMap[currentValue] = mevcutNumara;
-                                mevcutNumara++;
-                            }
+            Dictionary<string, List<string[]>> classes = new Dictionary<string, List<string[]>>();
 
-                            //O değerin numarasını SwitchSet'e yazıyoruz.
-                            SwitchSet[v, z] = degerMap[currentValue].ToString();
-                        }
-                        else
-                        {
-                            LastModel[v, z] = DataSet[v, z];
-                        }
-                    }
-                    else
-                    {
-                        // Eğer null ya da boşsa, bir default değer ya da boş bir string atayabiliriz
-                        SwitchSet[v, z] = "0"; // Veya istediğiniz bir default değer
-                    }
-                }
-            }
+            ClassOrganization(DataSet);
 
-            for (int ss = 0; ss < sutunSayisi; ss++)
-            {
-                for (int zz = 0; zz < satirSayisi; zz++)
-                {
-                    if (string.IsNullOrWhiteSpace(LastModel[zz, ss]))
-                    {
-                        LastModel[zz, ss] = SwitchSet[zz, ss];
-                    }
-                    else { }
-                }
-            }
+            classes = OrganizeByLastColumn(DataSet);
 
-            Console.WriteLine("DataSet İçeriği: \n");
-            ShowOnConsole(DataSet, satirSayisi, sutunSayisi);
+            DizileriOlustur(classes);
 
-            // DataSetimizdeki değerlerin atandığı sayilar ekrana yazdırılıyor.
-            Console.WriteLine("-------------------------------------------------------");
-            Console.WriteLine("DataSet'in Stringlerinin Aldığı Değerler : \n");
-            foreach (var s in degerMap)
-            {
-                Console.WriteLine(s);
-            }
-            Console.WriteLine("-------------------------------------------------------");
-
-            Console.WriteLine("DataSet İçeriği: \n");
-            ShowOnConsole(LastModel, satirSayisi, sutunSayisi);
 
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
 
-            ClassOrganization(DataSet);
 
-            OrganizeByLastColumn(DataSet);
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);
