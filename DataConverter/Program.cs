@@ -38,6 +38,7 @@ namespace MyApp
         const uint OPEN_EXISTING = 3;
         const uint FILE_SHARE_READ = 0x00000001;
 
+        //Verilerin Dizinin Ortlamalarını yazan Fonksiyon.
         public static string[,] OrtalamaYaz(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
@@ -74,6 +75,7 @@ namespace MyApp
             }
             return Dizi;
         }
+        //Diziyi Alıp Yaziları rakama çeviren fonksiyon ? işaretleri hariç
         public static string[,] YaziToRakam(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
@@ -135,26 +137,21 @@ namespace MyApp
             }
             return LastModel;
         }
+        //Diziyi classlara göre ayıran fonksiyon.
         public static Dictionary<string, List<string[]>> OrganizeByLastColumn(string[,] Dizi)
         {
             int rows = Dizi.GetLength(0);
             int cols = Dizi.GetLength(1);
 
-            // Son sütundaki benzersiz string'ler için bir sözlük (Dictionary) oluşturuyoruz
             Dictionary<string, List<string[]>> result = new Dictionary<string, List<string[]>>();
 
             for (int i = 0; i < rows; i++)
             {
-                // Son sütundaki string'i alıyoruz
                 string key = Dizi[i, cols - 1];
-
-                // Eğer sözlükte bu string (key) yoksa, o string için yeni bir liste oluşturuyoruz
                 if (!result.ContainsKey(key))
                 {
                     result[key] = new List<string[]>();
                 }
-
-                // O satırı listeye ekliyoruz
                 string[] row = new string[cols];
                 for (int j = 0; j < cols; j++)
                 {
@@ -170,7 +167,6 @@ namespace MyApp
 
             Console.WriteLine("--------------------------------------\n");
 
-            // Çıktı üretme kısmı: Her sınıf ve ona ait satırları yazdırıyoruz
             foreach (var entry in result)
             {
                 Console.WriteLine($"Class: {entry.Key}");
@@ -178,27 +174,23 @@ namespace MyApp
                 {
                     Console.WriteLine(string.Join(", ", row));
                 }
-                Console.WriteLine(); // Her sınıf arasına boş satır koyar
+                Console.WriteLine();
             }
-
             return result;
         }
+        //Class Bazlı Dizilerin oluşumunu sağlayan fonksiyon.
         public static void DizileriOlustur(Dictionary<string, List<string[]>> dictionary)
         {
-            // Her sınıf (anahtar) için bir dizi oluşturuyoruz
             foreach (var entry in dictionary)
             {
-                string className = entry.Key; // Sınıf ismi (anahtar)
-                List<string[]> data = entry.Value; // Sınıf verileri (değer)
+                string className = entry.Key;
+                List<string[]> data = entry.Value;
 
-                // Sınıf verileri ile dizi boyutlarını hesaplayalım
                 int rows = data.Count;
                 int cols = data[0].Length;
 
-                // Yeni dizi oluşturalım
                 string[,] result = new string[rows, cols];
 
-                // Verileri diziye aktaralım
                 for (int i = 0; i < rows; i++)
                 {
                     for (int j = 0; j < cols; j++)
@@ -206,8 +198,6 @@ namespace MyApp
                         result[i, j] = data[i][j];
                     }
                 }
-
-                // Diziyi ekrana yazdıralım
                 Console.WriteLine($"Sınıf: {className}");
                 Console.WriteLine("\nSınıfımızın Dönüşüm Değerleri : \n");
                 result = YaziToRakam(result);
@@ -218,6 +208,7 @@ namespace MyApp
                 Console.WriteLine("--------------------------------------\n");
             }
         }
+        //İstediğimiz Dizileri Yazdırmamıza yarıyan fonksiyon.
         public static void YazdirDizi(string[,] dizi)
         {
             int rows = dizi.GetLength(0);
@@ -233,10 +224,87 @@ namespace MyApp
             }
         }
 
+        public static double GetPseudoDoubleWithinRange(double lowerBound, double upperBound)
+        {
+            var random = new Random();
+            var rDouble = random.NextDouble();
+            var rRangeDouble = rDouble * (upperBound - lowerBound) + lowerBound;
+            return rRangeDouble;
+        }
+
+
+        public static string[,] OverSampling(string[,] data)
+        {
+            int rows = data.GetLength(0);  // data dizisindeki satır sayısı
+            int cols = data.GetLength(1);  // data dizisindeki sütun sayısı
+
+            int ekstra = rows / 2 + rows;  // ekstra satır sayısı (oversampling)
+
+            string[,] yeni = new string[ekstra, cols];  // yeni, oversampled dizi
+
+            // Minimum ve maksimum değerleri tutacak çiftler dizisi
+            double[][] çiftler = new double[cols][];
+
+            for (int e = 0; e < cols-1; e++)
+            {
+                // İlk değeri kontrol et ve geçerli bir sayı mı kontrol et
+                if (string.IsNullOrEmpty(data[0, e]) || !double.TryParse(data[0, e], out double minimumdeger))
+                {
+                    throw new ArgumentException("Veri null veya geçerli bir sayı değil.", nameof(data));
+                }
+
+                double maximumdeger = minimumdeger;  // İlk değerle başlatıyoruz
+
+                // Sadece rows kadar olan kısım data'dan yeni dizisine kopyalanır
+                for (int s = 0; s < rows; s++)
+                {
+                    // Eğer veri null ise ya da geçersiz bir string ise atla veya varsayılan değer ver
+                    if (string.IsNullOrEmpty(data[s, e]) || !double.TryParse(data[s, e], out double currentValue))
+                    {
+                        continue;  // Ya da hata ile çıkabilirsin
+                    }
+
+                    yeni[s, e] = data[s, e];  // Veriyi yeni dizisine kaydet
+
+                    // Minimum ve maksimum değerleri güncelle
+                    if (minimumdeger > currentValue)
+                    {
+                        minimumdeger = currentValue;
+                    }
+                    if (maximumdeger < currentValue)
+                    {
+                        maximumdeger = currentValue;
+                    }
+                }
+
+                // Her sütun için minimum ve maksimum değerleri kaydet
+                çiftler[e] = new double[2] { minimumdeger, maximumdeger };
+            }
+
+            // Yeni eklenen satırlar için rastgele değerler oluşturma
+            for (int i = rows; i < ekstra; i++)
+            {
+                for (int j = 0; j < cols-1; j++)
+                {
+                    double min = çiftler[j][0];
+                    double max = çiftler[j][1];
+
+                    // Min ve max aralığında rastgele bir değer al
+                    double randomValue = GetPseudoDoubleWithinRange(min, max);
+                    // Rastgele değer yeni dizisine kaydedilir
+                    yeni[i, j] = randomValue.ToString("F2", CultureInfo.InvariantCulture);
+                }
+            }
+            // Yeni oluşturulan diziyi yazdırma
+            return yeni;
+        }
+
+
+
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\DataSet.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\FileName.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -300,7 +368,7 @@ namespace MyApp
             //DataSetimizi oluşturuz.
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi, sutunSayisi];
-            string[,] LastModel = new string[satirSayisi, sutunSayisi];
+            string[,] LastModel = new string[satirSayisi + satirSayisi/2, sutunSayisi];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -328,9 +396,9 @@ namespace MyApp
             Console.WriteLine("---------------------------------");
 
             //Veri Setinin Rakama çevrilmiş halinin ekrana yazdırılması
-            //SwitchSet = YaziToRakam(DataSet);
+            SwitchSet = YaziToRakam(DataSet);
             //Console.WriteLine("Rakam Halleri\n");
-            //YazdirDizi(SwitchSet);
+            YazdirDizi(SwitchSet);
             //Console.WriteLine("---------------------------------");
 
             Dictionary<string, List<string[]>> classes = new Dictionary<string, List<string[]>>();
@@ -341,6 +409,8 @@ namespace MyApp
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
+
+            OverSampling(SwitchSet);
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);

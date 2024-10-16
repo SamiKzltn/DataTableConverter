@@ -7,12 +7,16 @@
       "RelativeMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|c:\\users\\dell\\documents\\github\\datatableconverter\\dataconverter\\lazim.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|solutionrelative:lazim.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|c:\\users\\dell\\documents\\github\\datatableconverter\\dataconverter\\filename.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|solutionrelative:filename.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|c:\\users\\dell\\documents\\github\\datatableconverter\\dataconverter\\dataset.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|solutionrelative:dataset.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|c:\\users\\dell\\documents\\github\\datatableconverter\\dataconverter\\lazim.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|solutionrelative:lazim.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40709F17-F5B1-4EB5-8556-C4833316C68F}|DataConverter.csproj|c:\\users\\dell\\documents\\github\\datatableconverter\\dataconverter\\car.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -26,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -43,6 +47,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "FileName.txt",
+              "DocumentMoniker": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\FileName.txt",
+              "RelativeDocumentMoniker": "FileName.txt",
+              "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\FileName.txt",
+              "RelativeToolTip": "FileName.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-10-16T07:36:45.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Lazim.txt",
               "DocumentMoniker": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\Lazim.txt",
               "RelativeDocumentMoniker": "Lazim.txt",
@@ -54,7 +71,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "car.txt",
               "DocumentMoniker": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\car.txt",
               "RelativeDocumentMoniker": "car.txt",
@@ -72,9 +89,10 @@
               "RelativeDocumentMoniker": "DataSet.txt",
               "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\DataSet.txt",
               "RelativeToolTip": "DataSet.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-09-24T15:39:45.446Z"
+              "WhenOpened": "2024-09-24T15:39:45.446Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -84,7 +102,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\DELL\\Documents\\GitHub\\DataTableConverter\\DataConverter\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAADgBAAAAAAAAAAAIwEkBAABHAAAAAAAAAA==",
+              "ViewState": "AgIAAIYBAAAAAAAAAAAAAJ0BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-20T09:18:23.596Z",
               "EditorCaption": ""
