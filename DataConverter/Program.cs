@@ -235,38 +235,32 @@ namespace MyApp
 
         public static string[,] OverSampling(string[,] data)
         {
-            int rows = data.GetLength(0);  // data dizisindeki satır sayısı
-            int cols = data.GetLength(1);  // data dizisindeki sütun sayısı
+            int rows = data.GetLength(0);
+            int cols = data.GetLength(1);
 
-            int ekstra = rows / 2 + rows;  // ekstra satır sayısı (oversampling)
+            int ekstra = rows / 2 + rows;
 
-            string[,] yeni = new string[ekstra, cols];  // yeni, oversampled dizi
+            string[,] yeni = new string[ekstra, cols];
 
-            // Minimum ve maksimum değerleri tutacak çiftler dizisi
             double[][] çiftler = new double[cols][];
 
             for (int e = 0; e < cols-1; e++)
             {
-                // İlk değeri kontrol et ve geçerli bir sayı mı kontrol et
                 if (string.IsNullOrEmpty(data[0, e]) || !double.TryParse(data[0, e], out double minimumdeger))
                 {
                     throw new ArgumentException("Veri null veya geçerli bir sayı değil.", nameof(data));
                 }
 
-                double maximumdeger = minimumdeger;  // İlk değerle başlatıyoruz
+                double maximumdeger = minimumdeger;
 
-                // Sadece rows kadar olan kısım data'dan yeni dizisine kopyalanır
                 for (int s = 0; s < rows; s++)
                 {
-                    // Eğer veri null ise ya da geçersiz bir string ise atla veya varsayılan değer ver
                     if (string.IsNullOrEmpty(data[s, e]) || !double.TryParse(data[s, e], out double currentValue))
                     {
-                        continue;  // Ya da hata ile çıkabilirsin
+                        continue;
                     }
+                    yeni[s, e] = data[s, e];
 
-                    yeni[s, e] = data[s, e];  // Veriyi yeni dizisine kaydet
-
-                    // Minimum ve maksimum değerleri güncelle
                     if (minimumdeger > currentValue)
                     {
                         minimumdeger = currentValue;
@@ -276,12 +270,8 @@ namespace MyApp
                         maximumdeger = currentValue;
                     }
                 }
-
-                // Her sütun için minimum ve maksimum değerleri kaydet
                 çiftler[e] = new double[2] { minimumdeger, maximumdeger };
             }
-
-            // Yeni eklenen satırlar için rastgele değerler oluşturma
             for (int i = rows; i < ekstra; i++)
             {
                 for (int j = 0; j < cols-1; j++)
@@ -289,13 +279,11 @@ namespace MyApp
                     double min = çiftler[j][0];
                     double max = çiftler[j][1];
 
-                    // Min ve max aralığında rastgele bir değer al
                     double randomValue = GetPseudoDoubleWithinRange(min, max);
-                    // Rastgele değer yeni dizisine kaydedilir
                     yeni[i, j] = randomValue.ToString("F2", CultureInfo.InvariantCulture);
                 }
             }
-            // Yeni oluşturulan diziyi yazdırma
+            YazdirDizi(yeni);
             return yeni;
         }
 
@@ -304,7 +292,7 @@ namespace MyApp
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\FileName.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Car.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
