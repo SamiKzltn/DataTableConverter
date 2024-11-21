@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -84,7 +85,7 @@ namespace MyApp
             int mevcutNumara = 1;
 
             // Her sütun için döngü
-            for (int i = 0; i < cols-1; i++)
+            for (int i = 0; i < cols - 1; i++)
             {
                 Dictionary<string, int> degerMap = new Dictionary<string, int>();
                 // Her satır için döngü
@@ -131,9 +132,9 @@ namespace MyApp
                 Console.WriteLine("-------------------------------------------------------");
                 degerMap = new Dictionary<string, int>();
             }
-            for(int z = 0; z < rows; z++)
+            for (int z = 0; z < rows; z++)
             {
-                LastModel[z, cols-1] = Dizi[z, cols-1];
+                LastModel[z, cols - 1] = Dizi[z, cols - 1];
             }
             return LastModel;
         }
@@ -160,8 +161,8 @@ namespace MyApp
                 result[key].Add(row);
             }
             Console.WriteLine("Classlarımız Şunlardır :\n");
-            foreach (var entry in result) 
-            { 
+            foreach (var entry in result)
+            {
                 Console.WriteLine(entry.Key);
             }
 
@@ -177,6 +178,20 @@ namespace MyApp
                 Console.WriteLine();
             }
             return result;
+        }
+
+        public static string[] Classes(Dictionary<string, List<string[]>> clas)
+        {
+            string[] claslar = new string[3];
+            int i = 0;
+
+            foreach (var entry in clas)
+            {
+                claslar[i] = entry.Key;
+                i++;
+            }
+
+            return claslar;
         }
         //Class Bazlı Dizilerin oluşumunu sağlayan fonksiyon.
         public static void DizileriOlustur(Dictionary<string, List<string[]>> dictionary)
@@ -244,7 +259,7 @@ namespace MyApp
 
             double[][] çiftler = new double[cols][];
 
-            for (int e = 0; e < cols-1; e++)
+            for (int e = 0; e < cols - 1; e++)
             {
                 if (string.IsNullOrEmpty(data[0, e]) || !double.TryParse(data[0, e], out double minimumdeger))
                 {
@@ -274,7 +289,7 @@ namespace MyApp
             }
             for (int i = rows; i < ekstra; i++)
             {
-                for (int j = 0; j < cols-1; j++)
+                for (int j = 0; j < cols - 1; j++)
                 {
                     double min = çiftler[j][0];
                     double max = çiftler[j][1];
@@ -287,12 +302,51 @@ namespace MyApp
             return yeni;
         }
 
+        public static void ConfusionMatrix(int[] yTrue, int[] yPred)
+        {
+            // Confusion Matrix için başlangıç değerleri
+            int truePositive = 0;  // TP
+            int falsePositive = 0; // FP
+            int falseNegative = 0; // FN
+            int trueNegative = 0;  // TN
 
+            // Confusion Matrix hesaplama
+            for (int i = 0; i < yTrue.Length; i++)
+            {
+                if (yTrue[i] == 1 && yPred[i] == 1)
+                    truePositive++; // Doğru Pozitif
+                else if (yTrue[i] == 0 && yPred[i] == 1)
+                    falsePositive++; // Hatalı Pozitif
+                else if (yTrue[i] == 1 && yPred[i] == 0)
+                    falseNegative++; // Hatalı Negatif
+                else if (yTrue[i] == 0 && yPred[i] == 0)
+                    trueNegative++; // Doğru Negatif
+            }
+
+            // Sonuçları yazdırma
+            Console.WriteLine("Confusion Matrix:");
+            Console.WriteLine($"TP (True Positive): {truePositive}");
+            Console.WriteLine($"FP (False Positive): {falsePositive}");
+            Console.WriteLine($"FN (False Negative): {falseNegative}");
+            Console.WriteLine($"TN (True Negative): {trueNegative}");
+
+            // Performans metrikleri hesaplama
+            double accuracy = (double)(truePositive + trueNegative) / yTrue.Length;
+            double precision = (double)truePositive / (truePositive + falsePositive);
+            double recall = (double)truePositive / (truePositive + falseNegative);
+            double f1Score = 2 * (precision * recall) / (precision + recall);
+
+            Console.WriteLine("\nPerformance Metrics:");
+            Console.WriteLine($"Accuracy: {accuracy:F2}");
+            Console.WriteLine($"Precision: {precision:F2}");
+            Console.WriteLine($"Recall: {recall:F2}");
+            Console.WriteLine($"F1-Score: {f1Score:F2}");
+        }
 
         static void Main(string[] args)
         {
             //DataSetimizin dosya yolunu buraya giriyoruz.
-            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\Car.txt";
+            string dosyaYolu = @"C:\Users\DELL\Documents\GitHub\DataTableConverter\DataConverter\IsTrue.txt";
 
             IntPtr dosyaHandle = CreateFile(dosyaYolu, GENERIC_READ, FILE_SHARE_READ, IntPtr.Zero, OPEN_EXISTING, 0, IntPtr.Zero);
 
@@ -301,7 +355,6 @@ namespace MyApp
                 Console.WriteLine("Dosya açılamadı.");
                 return;
             }
-
             //Dosya boyutunu sınırlamayı burdaki byte değişkeninden ayarlıyoruz.
             byte[] buffer = new byte[20480];
             uint bytesOkundu;
@@ -356,7 +409,8 @@ namespace MyApp
             //DataSetimizi oluşturuz.
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
             string[,] SwitchSet = new string[satirSayisi, sutunSayisi];
-            string[,] LastModel = new string[satirSayisi + satirSayisi/2, sutunSayisi];
+            string[,] LastModel = new string[satirSayisi + satirSayisi / 2, sutunSayisi];
+            string[] Claslarimiz = new string[3];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -384,21 +438,30 @@ namespace MyApp
             Console.WriteLine("---------------------------------");
 
             //Veri Setinin Rakama çevrilmiş halinin ekrana yazdırılması
-            SwitchSet = YaziToRakam(DataSet);
+            //SwitchSet = YaziToRakam(DataSet);
             //Console.WriteLine("Rakam Halleri\n");
-            YazdirDizi(SwitchSet);
+            //YazdirDizi(SwitchSet);
             //Console.WriteLine("---------------------------------");
 
             Dictionary<string, List<string[]>> classes = new Dictionary<string, List<string[]>>();
             classes = OrganizeByLastColumn(DataSet);
+            Claslarimiz = Classes(classes);
 
-            DizileriOlustur(classes);
+            int[] TrueClass = [1, 0, 0, 1, 1];
+            int[] PredClass = [1, 0, 1, 1, 0];
+
+            ConfusionMatrix(TrueClass, PredClass);
+
+            //DizileriOlustur(classes);
+
 
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
             Console.WriteLine($"Toplam Satır Sayısı: {satirSayisi}");
             Console.WriteLine($"En Fazla Sütun Sayısı: {sutunSayisi}");
 
-            OverSampling(SwitchSet);
+            //OverSampling(SwitchSet);
+
+
 
             //Dosyayı kapatma fonksiyonunu kullanarak dosyayı kapatıyoruz.
             CloseHandle(dosyaHandle);
