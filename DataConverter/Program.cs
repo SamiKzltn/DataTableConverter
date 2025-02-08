@@ -302,45 +302,98 @@ namespace MyApp
             return yeni;
         }
 
-        public static void ConfusionMatrix(int[] yTrue, int[] yPred)
+        public static void ConfusionMatrix(int[] yTrue, int[] yPred, int classnumber)
         {
-            // Confusion Matrix için başlangıç değerleri
-            int truePositive = 0;  // TP
-            int falsePositive = 0; // FP
-            int falseNegative = 0; // FN
-            int trueNegative = 0;  // TN
-
-            // Confusion Matrix hesaplama
-            for (int i = 0; i < yTrue.Length; i++)
+            switch (classnumber)
             {
-                if (yTrue[i] == 1 && yPred[i] == 1)
-                    truePositive++; // Doğru Pozitif
-                else if (yTrue[i] == 0 && yPred[i] == 1)
-                    falsePositive++; // Hatalı Pozitif
-                else if (yTrue[i] == 1 && yPred[i] == 0)
-                    falseNegative++; // Hatalı Negatif
-                else if (yTrue[i] == 0 && yPred[i] == 0)
-                    trueNegative++; // Doğru Negatif
+                case 2:
+                    int truePositive = 0;
+                    int falsePositive = 0;
+                    int falseNegative = 0;
+                    int trueNegative = 0;
+
+                    for (int i = 0; i < yTrue.Length; i++)
+                    {
+                        if (yTrue[i] == 1 && yPred[i] == 1)
+                            truePositive++;
+                        else if (yTrue[i] == 0 && yPred[i] == 1)
+                            falsePositive++;
+                        else if (yTrue[i] == 1 && yPred[i] == 0)
+                            falseNegative++;
+                        else if (yTrue[i] == 0 && yPred[i] == 0)
+                            trueNegative++;
+                    }
+
+                    Console.WriteLine("Confusion Matrix:");
+                    Console.WriteLine($"TP (True Positive): {truePositive}");
+                    Console.WriteLine($"FP (False Positive): {falsePositive}");
+                    Console.WriteLine($"FN (False Negative): {falseNegative}");
+                    Console.WriteLine($"TN (True Negative): {trueNegative}");
+
+                    // Performans metrikleri hesaplama
+                    double accuracy = (double)(truePositive + trueNegative) / yTrue.Length;
+                    double precision = (double)truePositive / (truePositive + falsePositive);
+                    double recall = (double)truePositive / (truePositive + falseNegative);
+                    double f1Score = 2 * (precision * recall) / (precision + recall);
+
+                    Console.WriteLine("\nPerformance Metrics:");
+                    Console.WriteLine($"Accuracy: {accuracy:F2}");
+                    Console.WriteLine($"Precision: {precision:F2}");
+                    Console.WriteLine($"Recall: {recall:F2}");
+                    Console.WriteLine($"F1-Score: {f1Score:F2}");
+                    break;
+                case 3:
+                    int truePositive_3 = 0;
+                    int falsePositive_3 = 0;
+                    int falseNegative_3 = 0;
+                    int trueNegative_3 = 0;
+
+                    for (int i = 0; i < yTrue.Length; i++)
+                    {
+                        if (yTrue[i] == 2 && yPred[i] == 2)
+                            truePositive_3++;
+                        else if (yTrue[i] == 1 && yPred[i] == 2)
+                            falsePositive_3++;
+                        else if (yTrue[i] == 0 && yPred[i] == 1)
+                            falsePositive_3++;
+                        else if (yTrue[i] == 0 && yPred[i] == 2)
+                            falsePositive_3++;
+                        else if (yTrue[i] == 2 && yPred[i] == 1)
+                            falseNegative_3++;
+                        else if (yTrue[i] == 1 && yPred[i] == 0)
+                            falseNegative_3++;
+                        else if (yTrue[i] == 2 && yPred[i] == 0)
+                            falseNegative_3++;
+                        else if (yTrue[i] == 1 && yPred[i] == 1)
+                            trueNegative_3++;
+                        else if (yTrue[i] == 0 && yPred[i] == 0)
+                            trueNegative_3++;
+                    }
+
+                    Console.WriteLine("Confusion Matrix:");
+                    Console.WriteLine($"TP (True Positive): {truePositive_3}");
+                    Console.WriteLine($"FP (False Positive): {falsePositive_3}");
+                    Console.WriteLine($"FN (False Negative): {falseNegative_3}");
+                    Console.WriteLine($"TN (True Negative): {trueNegative_3}");
+
+                    // Performans metrikleri hesaplama
+                    double accuracy_3 = (double)(truePositive_3 + trueNegative_3) / yTrue.Length;
+                    double precision_3 = (double)truePositive_3 / (truePositive_3 + falsePositive_3);
+                    double recall_3 = (double)truePositive_3 / (truePositive_3 + falseNegative_3);
+                    double f1Score_3 = 2 * (precision_3 * recall_3) / (precision_3 + recall_3);
+
+                    Console.WriteLine("\nPerformance Metrics:");
+                    Console.WriteLine($"Accuracy: {accuracy_3:F2}");
+                    Console.WriteLine($"Precision: {precision_3:F2}");
+                    Console.WriteLine($"Recall: {recall_3:F2}");
+                    Console.WriteLine($"F1-Score: {f1Score_3:F2}");
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+
             }
-
-            // Sonuçları yazdırma
-            Console.WriteLine("Confusion Matrix:");
-            Console.WriteLine($"TP (True Positive): {truePositive}");
-            Console.WriteLine($"FP (False Positive): {falsePositive}");
-            Console.WriteLine($"FN (False Negative): {falseNegative}");
-            Console.WriteLine($"TN (True Negative): {trueNegative}");
-
-            // Performans metrikleri hesaplama
-            double accuracy = (double)(truePositive + trueNegative) / yTrue.Length;
-            double precision = (double)truePositive / (truePositive + falsePositive);
-            double recall = (double)truePositive / (truePositive + falseNegative);
-            double f1Score = 2 * (precision * recall) / (precision + recall);
-
-            Console.WriteLine("\nPerformance Metrics:");
-            Console.WriteLine($"Accuracy: {accuracy:F2}");
-            Console.WriteLine($"Precision: {precision:F2}");
-            Console.WriteLine($"Recall: {recall:F2}");
-            Console.WriteLine($"F1-Score: {f1Score:F2}");
         }
 
         static void Main(string[] args)
@@ -408,9 +461,6 @@ namespace MyApp
             }
             //DataSetimizi oluşturuz.
             string[,] DataSet = new string[satirSayisi, sutunSayisi];
-            string[,] SwitchSet = new string[satirSayisi, sutunSayisi];
-            string[,] LastModel = new string[satirSayisi + satirSayisi / 2, sutunSayisi];
-            string[] Claslarimiz = new string[3];
 
             //DataSet'imizi dolduruyoruz.
             for (int i = 0; i < satirSayisi; i++)
@@ -444,15 +494,31 @@ namespace MyApp
             //Console.WriteLine("---------------------------------");
 
             Dictionary<string, List<string[]>> classes = new Dictionary<string, List<string[]>>();
-            classes = OrganizeByLastColumn(DataSet);
-            Claslarimiz = Classes(classes);
 
-            int[] TrueClass = [1, 0, 0, 1, 1];
-            int[] PredClass = [1, 0, 1, 1, 0];
+            //int[] TrueClass = [1, 0, 0, 1, 1];
+            //int[] PredClass = [1, 0, 1, 1, 0];
 
-            ConfusionMatrix(TrueClass, PredClass);
+            //ConfusionMatrix(TrueClass, PredClass,2);
 
             //DizileriOlustur(classes);
+
+            // Test verisi
+
+            var (trainSet, testSet) = KNN.SplitDataset(DataSet, 0.8);
+
+            // Test setinden bir input seç (örneğin, ilk satır)
+            int colCount = testSet.GetLength(1);
+            var input = new string[colCount - 1];
+            for (int i = 0; i < colCount - 1; i++)
+            {
+                input[i] = testSet[0, i]; // testSet'in ilk satırını alıyoruz
+            }
+
+            // Tahmin yap
+            string result = KNN.Predict(trainSet, input, k: 3);
+
+            // Sonucu yazdır
+            Console.WriteLine($"Tahmin edilen sınıf: {result}");
 
 
             //Toplam satir ve sutun sayimizi yazdırıyoruz.
